@@ -4,11 +4,13 @@
 
 ## 重要提示
 
+这只是个笑话。笑点解析请看文末。
 
+本项目使用了TRAE。
 
 ## 导语
 
-本项目使用[GNU General Public License v3.0](LICENSE) 许可证。
+本项目使用[GNU General Public License v3.0](LICENSE)许可证。
 
 本项目旨在彻底解决**压缩文件时，即使已经以最大程度压缩，文件体积仍然很大**这一历史性问题。为了降低压缩率到10%甚至1%，IQ Online Studio经过长达`57542400`秒的艰苦研究后隆重发布了一个具有改变世界和划时代意义的史诗级算法——R.I.P.算法。（注：由于IQ Online Studio条件艰苦，在研发R.I.P.算法时没有联网或与外界有任何接触，排除任何抄袭的可能，直接认为R.I.P.算法是IQ Online Studio自主研发的产物。）
 
