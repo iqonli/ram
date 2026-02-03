@@ -16,16 +16,93 @@
 
 >## R.I.P.算法
 >
->### 英文：R.I.P. SuanFa (Rush In Peace)
+>### 英文：R.I.P. SuanFa (R.I.P., Rush In Peace)
 >
 >一种有损压缩算法，基于队列。有以下几种计算模式：
 >
->（设待压缩队列为A，已压缩队列为B，压缩后队列为C）
+>- 精准模式（时间复杂度O(N^2)）
+>```c++
+>static std::vector<unsigned char> preciseMode(const std::vector<unsigned char>& data)
+>{
+>	if (data.empty())
+>	{
+>		return {0};
+>	}
+>	
+>	std::vector<unsigned char> current = data;
+>	
+>	while (current.size() > 1)
+>	{
+>		std::vector<unsigned char> next;
+>		
+>		for (size_t i = 0; i < current.size() - 1; ++i)
+>		{
+> 			next.push_back(current[i] ^ current[i + 1]);
+>		}
+>		
+>		current = next;
+>	}
+>	
+>	return current;
+>}
+>```
 >
->- 精准模式（时间复杂度O(N_2)）——每一轮对A_i和A_(i+1)进行异或运算，并将结果保存在B_i，一轮结束后将B转为A，并进行下一轮。当B的长度为1时，压缩结束，B即为C。
->- 快速前压模式（时间复杂度O(N)）——每一轮对A_1和A_i进行异或运算，并将结果保存在A_1，一轮结束后将i的数值加1，并进行下一轮。当A的长度为1时，压缩结束，A即为C。
->- 快速后压模式（时间复杂度O(N)）——每一轮对A_n和A_i进行异或运算，并将结果保存在A_n，一轮结束后将i的数值减1，并进行下一轮。当A的长度为1时，压缩结束，A即为C。
->- 极速天命模式（时间复杂度O(1)）——随机选取A的其中一项作为C。
+>- 快速前压模式（时间复杂度O(N)）
+>```c++
+>static std::vector<unsigned char> fastFrontMode(const std::vector<unsigned char>& data)
+>{
+>	if (data.empty())
+>	{
+> 		return {0};
+>	}
+>	
+>	std::vector<unsigned char> current = data;
+>	
+>	for (size_t i = 1; i < current.size(); ++i)
+>	{
+> 		current[0] ^= current[i];
+>	}
+>	
+>	return {current[0]};
+>}
+>```
+>
+>- 快速后压模式（时间复杂度O(N)）
+>```c++
+>static std::vector<unsigned char> fastBackMode(const std::vector<unsigned char>& data)
+>{
+> 	if (data.empty())
+> 	{
+> 		return {0};
+> 	}
+>    	
+> 	std::vector<unsigned char> current = data;
+>    	
+> 	for (size_t i = 0; i < current.size() - 1; ++i)
+> 	{
+> 		current.back() ^= current[i];
+> 	}
+>    	
+> 	return {current.back()};
+>}
+>```
+>
+>- 极速天命模式（时间复杂度O(1)）
+>```c++
+>static std::vector<unsigned char> destinyMode(const std::vector<unsigned char>& data)
+>{
+> 	if (data.empty())
+> 	{
+> 		return {0};
+> 	}
+>    	
+> 	std::random_device rd;
+> 	std::mt19937 gen(rd());
+> 	std::uniform_int_distribution<> distrib(0, data.size() - 1);
+>    	
+> 	return {data[distrib(gen)]};
+>}
+
 
 
 ## 介绍
@@ -36,11 +113,11 @@
    - 支持直接运行程序、命令行调用、右键菜单使用
    - 自研分卷压缩技术哈未曼编码（Hafuman Encode），无需字典或映射表，精准压缩到bit，可以设置分卷大小（Byte）或分卷数量
    - 压缩文件格式为`.raw`，即为`R.I.P. Archive Writefile`的首字母缩写
-   - 分卷压缩文件格式为`.n.raw`，避免与`.z01`、`.rar.part1`、`.7z.001`等格式冲突
-   - 支持压缩后自动永久强力粉碎原文件，该选项默认自动开启
+   - 分卷压缩文件格式为`.n.raw`，避免与`.z01`、`.part1.rar`、`.7z.001`等格式冲突
+   - 支持压缩后自动永久强力粉碎原文件，该选项默认自动关闭
    - 该软件的压缩功能速度快，效果好，我们强烈建议您将珍贵的照片、视频、文档，以及各种学习资料、工作文件、娱乐影音、软件资源等进行R.I.P.压缩后并删除原文件！
 2. 注意事项
-   - 虽然压缩出来的文件仅有1B，但请不用担心，这是经过严谨的压缩算法精确计算得来的文件，只要进行适当的逆向计算，即可精准解压出源文件
+   - 虽然压缩出来的文件仅有1B，但请不用担心，这是经过严谨的压缩算法精确计算得来的文件，只要进行适当的逆向计算，即可精准解压出原文件
    - 由于压缩文件的压缩率极低，导致文件解压的计算较为复杂，解压操作需耗费很长一段时间，如果想要使用压缩文件请尽早解压（单个压缩前体积为1GiB的`.raw`压缩文件的解压时间保守估计为`-2147483647`年）
    - 程序使用的R.I.P.算法本身具备极高的安全系数，无需压缩密码，也可以实现极好的加密效果，压缩文件基本不可能逆向破解，适用于高度敏感机密文件的压缩，以及各种安全系数要求极高的场景
 
@@ -48,9 +125,9 @@
 
 1. 下载[release](https://github.com/iqonli/RAM/releases)版的zip文件
 
-1. 将`ram.exe`所在目录添加到环境变量
+1. 解压后，将`ram.exe`所在目录添加到环境变量
 
-   >您可以在管理员权限的命令行中运行`rundll32 sysdm.cpl,EditEnvironmentVariables`直接进入环境变量页面
+   >您可以在拥有管理员权限的命令行中运行`rundll32 sysdm.cpl,EditEnvironmentVariables`以直接进入环境变量页面
 1. 进入命令行，运行`ram`查看提示信息
 
 ## 命令行参数调用手册
@@ -121,7 +198,7 @@ IQ Online Studio经过长达`57542400`秒的艰苦研究后
 直接认为R.I.P.算法是IQ Online Studio自主研发的产物
 >可能：我想要说的前人们都说过了。
 
-英文：R.I.P. SuanFa (Rush In Peace)
+英文：R.I.P. SuanFa (R.I.P., Rush In Peace)
 >SuanFa彰显三脚猫英文，Rush In Peace体现宁静中的混乱。
 
 一种有损压缩算法
@@ -134,10 +211,10 @@ IQ Online Studio经过长达`57542400`秒的艰苦研究后
 >本就是IQ Online Studio的算法，根本不需要深度定制。
 
 为了保持压缩文件的最大程度压缩，虽然文件大小为1B，但仅有两种不同文件内容
->“仅有”体现了1B之大。
+>“仅有”体现了1B体积之大。
 
 自研分卷压缩技术哈未曼编码（Hafuman Encode）
->致敬经典算法哈夫曼（Haffman）。
+>“致敬”经典算法哈夫曼（Haffman）。
 
 压缩文件格式为`.raw`，即为`R.I.P. Archive Writefile`的首字母缩写
 >raw意为原始，是一种无损图片文件的格式，这里用“无损”反串全损，令人忍俊不禁。
@@ -155,7 +232,7 @@ IQ Online Studio经过长达`57542400`秒的艰苦研究后
 >时间太大，甚至溢出了。
 
 压缩文件基本不可能逆向破解
->解压都不行，还逆向破解呢。
+>自信点，把“基本”去了。解压都不行，还逆向破解呢。
 
 适用于高度敏感机密文件的压缩，以及各种安全系数要求极高的场景
 >推荐给间谍使用。
