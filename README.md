@@ -178,7 +178,7 @@ GPU: NVIDIA H100 80GB HBM3 × 4
 
 OS: Microsoft Windows Server 2025 Datacenter
 
-有事没事请加QQ群：743278470，你可以添加句子，报告错误，寻求帮助，骂人
+有事没事请加QQ群：743278470，你可以报告错误，寻求帮助，骂人
 
 
 
